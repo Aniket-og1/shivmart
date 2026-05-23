@@ -454,4 +454,297 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => el.classList.add('active'));
     }
 
+
+    // ==========================================================================
+    // PREMIUM REVAMP INTERACTIVES (AGENCY-QUALITY LOGIC)
+    // ==========================================================================
+
+    // 1. Page Preloader Fade-out
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        window.addEventListener('load', () => {
+            // Keep loader active for 1.3s to allow fill animation to finish
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+            }, 1300);
+        });
+        // Fallback in case load event takes too long
+        setTimeout(() => {
+            if (!preloader.classList.contains('fade-out')) {
+                preloader.classList.add('fade-out');
+            }
+        }, 3000);
+    }
+
+    // 2. Page Scroll Progress & Back-to-Top circular ring
+    const scrollProgress = document.getElementById('scroll-progress');
+    const backToTop = document.getElementById('back-to-top');
+    const progressRingCircle = document.querySelector('.progress-ring-circle');
+
+    if (progressRingCircle) {
+        const radius = progressRingCircle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        
+        progressRingCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+        progressRingCircle.style.strokeDashoffset = circumference;
+
+        const updateScrollIndicator = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+            // Update top progress bar
+            if (scrollProgress) {
+                scrollProgress.style.width = `${scrollPercent}%`;
+            }
+
+            // Update circular progress ring
+            const offset = circumference - (scrollPercent / 100) * circumference;
+            progressRingCircle.style.strokeDashoffset = offset;
+
+            // Show/Hide back-to-top button
+            if (scrollTop > 400) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        };
+
+        window.addEventListener('scroll', updateScrollIndicator);
+        updateScrollIndicator(); // Run once initially
+    }
+
+    window.scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
+    // 3. Showroom Visualizer Hotspots
+    const hotspots = document.querySelectorAll('.hotspot');
+    hotspots.forEach(hotspot => {
+        const btn = hotspot.querySelector('.hotspot-btn');
+        
+        // Mobile Toggle Click
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = hotspot.classList.contains('active');
+            
+            // Close all other hotspots
+            hotspots.forEach(h => h.classList.remove('active'));
+            
+            if (!isActive) {
+                hotspot.classList.add('active');
+            }
+        });
+
+        // Close on mouse leave for desktop hover experience
+        hotspot.addEventListener('mouseleave', () => {
+            hotspot.classList.remove('active');
+        });
+    });
+
+    // Close visualizer tooltips when clicking anywhere else
+    document.addEventListener('click', () => {
+        hotspots.forEach(h => h.classList.remove('active'));
+    });
+
+    // 4. Interactive Cost Estimator / Project Planner
+    let currentStep = 1;
+    let selectedType = 'bathroom';
+    let selectedTier = 'luxury';
+    let scopeValue = 1;
+
+    const calcStepTitle = document.getElementById('calc-header-step-title');
+    const calcStepDesc = document.getElementById('calc-header-step-desc');
+    const calcProgressFill = document.getElementById('calc-progress-fill');
+    const calcBtnBack = document.getElementById('calc-btn-back');
+    const calcBtnNext = document.getElementById('calc-btn-next');
+    const calcSteps = document.querySelectorAll('.calc-step');
+
+    // Step 3 dynamic scope labels mapping
+    const scopeConfig = {
+        bathroom: {
+            question: "Number of bathrooms to remodel?",
+            label: "Enter bathroom count (e.g. 1, 2, 3...)",
+            defaultVal: 1,
+            unit: "Bathroom"
+        },
+        tiles: {
+            question: "Approximate flooring / tiling area?",
+            label: "Enter area size in square feet (e.g. 150, 300, 600...)",
+            defaultVal: 200,
+            unit: "Sq Ft"
+        },
+        plumbing: {
+            question: "Number of plumbing setups / bathrooms?",
+            label: "Enter count of bathroom setups (e.g. 1, 2...)",
+            defaultVal: 1,
+            unit: "Setup"
+        },
+        full: {
+            question: "Number of bathrooms for full fitout?",
+            label: "Enter bathroom count (includes tiles, fittings & piping)",
+            defaultVal: 1,
+            unit: "Bathroom"
+        }
+    };
+
+    // Handle options clicking inside Steps 1 and 2
+    const stepOptions = document.querySelectorAll('.calc-step .calc-card-option');
+    stepOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            // Unselect sibling options
+            const siblings = option.parentElement.querySelectorAll('.calc-card-option');
+            siblings.forEach(s => s.classList.remove('selected'));
+            
+            // Select current
+            option.classList.add('selected');
+            
+            // Track state
+            const parentStep = option.closest('.calc-step').getAttribute('data-step');
+            const val = option.getAttribute('data-value');
+            
+            if (parentStep === '1') {
+                selectedType = val;
+                // Pre-populate step 3 input values based on defaults
+                const config = scopeConfig[selectedType];
+                document.getElementById('calc-scope-input').value = config.defaultVal;
+            } else if (parentStep === '2') {
+                selectedTier = val;
+            }
+        });
+    });
+
+    const updateStepView = () => {
+        // Show active step, hide others
+        calcSteps.forEach(step => {
+            step.classList.remove('active');
+            if (parseInt(step.getAttribute('data-step')) === currentStep) {
+                step.classList.add('active');
+            }
+        });
+
+        // Update progress line width
+        const progressPercent = (currentStep / 4) * 100;
+        calcProgressFill.style.width = `${progressPercent}%`;
+
+        // Update Header texts
+        if (currentStep === 1) {
+            calcStepTitle.textContent = "Select Project Type";
+            calcStepDesc.textContent = "Step 1 of 4: Tell us what you are building";
+            calcBtnBack.style.visibility = 'hidden';
+            calcBtnNext.textContent = "Next Step";
+        } else if (currentStep === 2) {
+            calcStepTitle.textContent = "Choose Material Tier";
+            calcStepDesc.textContent = "Step 2 of 4: Select your quality class";
+            calcBtnBack.style.visibility = 'visible';
+            calcBtnNext.textContent = "Next Step";
+        } else if (currentStep === 3) {
+            // Apply dynamic labels
+            const config = scopeConfig[selectedType];
+            document.getElementById('calc-scope-question').textContent = config.question;
+            document.getElementById('calc-scope-label').textContent = config.label;
+
+            calcStepTitle.textContent = "Specify Project Scope";
+            calcStepDesc.textContent = "Step 3 of 4: Enter project dimensions";
+            calcBtnBack.style.visibility = 'visible';
+            calcBtnNext.textContent = "Calculate Estimate";
+        } else if (currentStep === 4) {
+            calcStepTitle.textContent = "Estimated Quote Breakdown";
+            calcStepDesc.textContent = "Ready to build: Project pricing summary";
+            calcBtnBack.style.visibility = 'visible';
+            calcBtnNext.textContent = "Inquire on WhatsApp";
+            
+            // Run budget calculator formulas
+            calculateBudgetResults();
+        }
+    };
+
+    const calculateBudgetResults = () => {
+        scopeValue = parseFloat(document.getElementById('calc-scope-input').value) || 1;
+        if (scopeValue < 1) scopeValue = 1;
+
+        let minUnit = 0;
+        let maxUnit = 0;
+        let unitText = "";
+
+        // Core formula matrix
+        if (selectedType === 'bathroom') {
+            unitText = `${scopeValue} Bathroom${scopeValue > 1 ? 's' : ''}`;
+            if (selectedTier === 'standard') { minUnit = 12000; maxUnit = 22000; }
+            else if (selectedTier === 'premium') { minUnit = 28000; maxUnit = 50000; }
+            else { minUnit = 65000; maxUnit = 135000; }
+        } else if (selectedType === 'tiles') {
+            unitText = `${scopeValue} Sq Ft`;
+            if (selectedTier === 'standard') { minUnit = 65; maxUnit = 100; }
+            else if (selectedTier === 'premium') { minUnit = 110; maxUnit = 170; }
+            else { minUnit = 190; maxUnit = 320; }
+        } else if (selectedType === 'plumbing') {
+            unitText = `${scopeValue} Setup${scopeValue > 1 ? 's' : ''}`;
+            if (selectedTier === 'standard') { minUnit = 4500; maxUnit = 8000; }
+            else if (selectedTier === 'premium') { minUnit = 9500; maxUnit = 16500; }
+            else { minUnit = 20000; maxUnit = 40000; }
+        } else if (selectedType === 'full') {
+            unitText = `${scopeValue} Bathroom Setup${scopeValue > 1 ? 's' : ''}`;
+            if (selectedTier === 'standard') { minUnit = 25000; maxUnit = 45000; }
+            else if (selectedTier === 'premium') { minUnit = 60000; maxUnit = 100000; }
+            else { minUnit = 140000; maxUnit = 320000; }
+        }
+
+        const totalMin = Math.round(minUnit * scopeValue);
+        const totalMax = Math.round(maxUnit * scopeValue);
+        const avgTotal = Math.round((totalMin + totalMax) / 2);
+
+        // Display results
+        document.getElementById('estimate-range').textContent = `₹${totalMin.toLocaleString('en-IN')} - ₹${totalMax.toLocaleString('en-IN')}`;
+        document.getElementById('summary-scope').textContent = unitText;
+        
+        let tierLabel = "Standard Tier (Value)";
+        if (selectedTier === 'premium') tierLabel = "Premium Tier (Brands)";
+        if (selectedTier === 'luxury') tierLabel = "Luxury Tier (Jaquar Artize)";
+        document.getElementById('summary-tier').textContent = tierLabel;
+        document.getElementById('summary-breakdown').textContent = `₹${avgTotal.toLocaleString('en-IN')}`;
+    };
+
+    const handleWhatsAppExport = () => {
+        const config = scopeConfig[selectedType];
+        let tierLabel = "Standard (Value)";
+        if (selectedTier === 'premium') tierLabel = "Premium (Brands)";
+        if (selectedTier === 'luxury') tierLabel = "Luxury (Jaquar Artize)";
+
+        const totalMin = document.getElementById('estimate-range').textContent;
+        const scopeText = document.getElementById('summary-scope').textContent;
+        const avgText = document.getElementById('summary-breakdown').textContent;
+
+        const message = `Hi Shiv Hardware, I generated a project estimate on your website and would like a formal quote:
+- *Project Area:* ${selectedType.toUpperCase()}
+- *Quality Class:* ${tierLabel}
+- *Scope size:* ${scopeText}
+- *Estimated Budget:* ${totalMin} (Average: ${avgText})
+Please let me know of product availability. Thanks!`;
+
+        // Send to Dinesh Agarwalla (WhatsApp: 917002808746)
+        const whatsappUrl = `https://wa.me/917002808746?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    };
+
+    calcBtnBack.addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepView();
+        }
+    });
+
+    calcBtnNext.addEventListener('click', () => {
+        if (currentStep < 4) {
+            currentStep++;
+            updateStepView();
+        } else {
+            handleWhatsAppExport();
+        }
+    });
+
 });
+
