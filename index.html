@@ -48,7 +48,7 @@
                 <a href="#home" class="nav-link active" id="nav-link-home">Home</a>
                 <a href="#about" class="nav-link" id="nav-link-about">About Us</a>
                 <a href="#categories" class="nav-link" id="nav-link-categories">Categories</a>
-                <a href="#visualizer" class="nav-link" id="nav-link-visualizer">Showroom Visualizer</a>
+                <a href="#lookbook" class="nav-link" id="nav-link-lookbook">Design Lookbook</a>
                 <a href="#calculator" class="nav-link" id="nav-link-calculator">Budget Estimator</a>
                 <a href="#brands" class="nav-link" id="nav-link-brands">Brands</a>
                 <a href="#gallery" class="nav-link" id="nav-link-gallery">Gallery</a>
@@ -412,77 +412,61 @@
         </div>
     </section>
 
-    <!-- Interactive Showroom Visualizer -->
-    <section class="visualizer-section section" id="visualizer">
+    <!-- Curated Design Lookbook / Templates Section -->
+    <section class="lookbook-section section" id="lookbook">
         <div class="container">
             <div class="section-header text-center">
-                <span class="section-tag style-white">VISUAL INSPECTOR</span>
-                <h2 class="section-title text-white">Interactive Showroom</h2>
-                <p class="section-subtitle text-gray-400">Tap or hover on the pulsing hotspots below to explore luxury fittings, sanitary fixtures, and tiles available at our Moranhat showroom.</p>
+                <span class="section-tag style-white">DESIGN TEMPLATES</span>
+                <h2 class="section-title text-white">Curated Inspiration Lookbook</h2>
+                <p class="section-subtitle text-gray-400">Discover coordinated bathroom styles curated by our design consultants. Select a template to view the matching tiles, fittings, and pipes available in our store.</p>
             </div>
 
-            <div class="visualizer-card-container reveal-up" id="visualizer-card">
-                <div class="visualizer-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200&h=800&fit=crop" alt="Luxury Bathroom Showroom Layout" loading="lazy">
-                    
-                    <!-- Hotspot 1: Wall Tiles -->
-                    <div class="hotspot" style="top: 30%; left: 15%;" id="hotspot-tiles">
-                        <button class="hotspot-btn" aria-label="Explore Vitrified Wall Tiles">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                        <div class="hotspot-pulse"></div>
-                        <div class="hotspot-tooltip">
-                            <span class="tooltip-tag">TILES &amp; CLADDING</span>
-                            <h4 class="tooltip-title">Premium Wall Tiles</h4>
-                            <p class="tooltip-desc">High-gloss vitrified marble-finish wall tiles. Stain-resistant, moisture-proof, and designed for ultimate elegance.</p>
-                            <span class="tooltip-brand">Available Brands: Kajaria, Somany &amp; imports</span>
-                            <div class="tooltip-arrow"></div>
-                        </div>
+            <div class="lookbook-grid">
+                <!-- Lookbook 1: Royal Gold -->
+                <div class="lookbook-card reveal-up" onclick="openLookbookModal('royal')" id="card-lookbook-royal">
+                    <div class="lookbook-img-box">
+                        <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=600&h=400&fit=crop" alt="The Royal Gold Bathroom Template" loading="lazy">
+                        <span class="lookbook-badge">Luxury Styling</span>
                     </div>
-
-                    <!-- Hotspot 2: Luxury Faucets -->
-                    <div class="hotspot" style="top: 55%; left: 45%;" id="hotspot-faucets">
-                        <button class="hotspot-btn" aria-label="Explore Gold Brass Faucets">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                        <div class="hotspot-pulse"></div>
-                        <div class="hotspot-tooltip">
-                            <span class="tooltip-tag">BATHROOM FITTINGS</span>
-                            <h4 class="tooltip-title">Designer Gold Faucets</h4>
-                            <p class="tooltip-desc">Luxury brass-body hot and cold single-lever basin mixers with premium gold-chrome finish. Water-saving aerators built-in.</p>
-                            <span class="tooltip-brand">Authorized Dealer: Jaquar (Artize) &amp; Parryware</span>
-                            <div class="tooltip-arrow"></div>
-                        </div>
+                    <div class="lookbook-content">
+                        <h3 class="lookbook-title">The Royal Gold Bath</h3>
+                        <p class="lookbook-desc">A statement of classic grandeur featuring polished gold-chrome brass fittings coordinated with glossy white marble-veined vitrified tiles.</p>
+                        <span class="lookbook-action-link">
+                            <span>Explore Coordinated Items</span>
+                            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </span>
                     </div>
+                </div>
 
-                    <!-- Hotspot 3: Luxury Vanity / Wash Basin -->
-                    <div class="hotspot" style="top: 68%; left: 32%;" id="hotspot-sanitary">
-                        <button class="hotspot-btn" aria-label="Explore Wash Basins">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                        <div class="hotspot-pulse"></div>
-                        <div class="hotspot-tooltip">
-                            <span class="tooltip-tag">SANITARY WARE</span>
-                            <h4 class="tooltip-title">Tabletop Designer Basin</h4>
-                            <p class="tooltip-desc">Premium ceramic tabletop wash basins featuring anti-bacterial glaze. Perfectly rounded edges for a sleek modern outline.</p>
-                            <span class="tooltip-brand">Premium Brands: Parryware &amp; Jaquar</span>
-                            <div class="tooltip-arrow"></div>
-                        </div>
+                <!-- Lookbook 2: Modern Minimalist -->
+                <div class="lookbook-card reveal-up" onclick="openLookbookModal('minimalist')" id="card-lookbook-minimalist">
+                    <div class="lookbook-img-box">
+                        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=400&fit=crop" alt="Modern Minimalist Bathroom Template" loading="lazy">
+                        <span class="lookbook-badge">Matte Minimalist</span>
                     </div>
+                    <div class="lookbook-content">
+                        <h3 class="lookbook-title">Modern Minimalist Bath</h3>
+                        <p class="lookbook-desc">A clean, geometric profile utilizing coordinated matte black faucets, wall-mounted European closets, and structured gray concrete-finish tiles.</p>
+                        <span class="lookbook-action-link">
+                            <span>Explore Coordinated Items</span>
+                            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </span>
+                    </div>
+                </div>
 
-                    <!-- Hotspot 4: Modular Bath Cabinets -->
-                    <div class="hotspot" style="top: 80%; left: 52%;" id="hotspot-cabinets">
-                        <button class="hotspot-btn" aria-label="Explore Bath Vanity Cabinets">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                        <div class="hotspot-pulse"></div>
-                        <div class="hotspot-tooltip">
-                            <span class="tooltip-tag">VANITY SETUPS</span>
-                            <h4 class="tooltip-title">Waterproof Bath Cabinets</h4>
-                            <p class="tooltip-desc">PVC-solid modular vanity cabinets with soft-close telescopic drawer runners. Fully water and moisture resistant.</p>
-                            <span class="tooltip-brand">Available: Custom setups &amp; modular builds</span>
-                            <div class="tooltip-arrow"></div>
-                        </div>
+                <!-- Lookbook 3: Eco-Flow Smart -->
+                <div class="lookbook-card reveal-up" onclick="openLookbookModal('ecoflow')" id="card-lookbook-ecoflow">
+                    <div class="lookbook-img-box">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop" alt="Eco-Flow Smart Bathroom Template" loading="lazy">
+                        <span class="lookbook-badge">Water Conservation</span>
+                    </div>
+                    <div class="lookbook-content">
+                        <h3 class="lookbook-title">Eco-Flow Smart Setup</h3>
+                        <p class="lookbook-desc">A sustainable design built for efficiency. Features water-saving aerated faucets, dual-flush cistern toilets, and Prince CPVC plumbing.</p>
+                        <span class="lookbook-action-link">
+                            <span>Explore Coordinated Items</span>
+                            <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -944,7 +928,7 @@
                     <a href="#home">Home</a>
                     <a href="#about">About Us</a>
                     <a href="#categories">Categories</a>
-                    <a href="#visualizer">Showroom Visualizer</a>
+                    <a href="#lookbook">Design Lookbook</a>
                     <a href="#calculator">Budget Estimator</a>
                     <a href="#gallery">Gallery</a>
                 </div>
@@ -993,6 +977,19 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
             <div class="modal-body" id="modal-body-content">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Lookbook Detail Modal -->
+    <div class="modal" id="lookbook-modal" aria-hidden="true" role="dialog">
+        <div class="modal-overlay" onclick="closeLookbookModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLookbookModal()" aria-label="Close template details">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="modal-body" id="lookbook-modal-body-content">
                 <!-- Injected via JavaScript -->
             </div>
         </div>

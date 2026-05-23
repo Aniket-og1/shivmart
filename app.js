@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeCategoryModal();
+            closeLookbookModal();
             closeLightbox();
         }
     });
@@ -521,34 +522,108 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // 3. Showroom Visualizer Hotspots
-    const hotspots = document.querySelectorAll('.hotspot');
-    hotspots.forEach(hotspot => {
-        const btn = hotspot.querySelector('.hotspot-btn');
-        
-        // Mobile Toggle Click
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isActive = hotspot.classList.contains('active');
-            
-            // Close all other hotspots
-            hotspots.forEach(h => h.classList.remove('active'));
-            
-            if (!isActive) {
-                hotspot.classList.add('active');
-            }
-        });
+    // 3. Design Lookbook Templates & Modal Logic
+    const lookbookData = {
+        royal: {
+            title: "The Royal Gold Bath",
+            tag: "LUXURY STYLING",
+            description: "A statement of classic grandeur designed for premium homes. This template coordinates high-end gold brass faucets and overhead rain showers with polished, vein-matched white marble vitrified tiles.",
+            image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&h=500&fit=crop",
+            items: [
+                { name: "Gold Basin Mixer Taps", spec: "Jaquar Artize Collection" },
+                { name: "Gold Overhead Rain Shower", spec: "Jaquar Premium Series" },
+                { name: "White Marble Wall Tiles", spec: "Kajaria Vitrified 800x1600mm" },
+                { name: "Luxury Ceramic Tabletop Basin", spec: "Parryware Designer Series" },
+                { name: "PVC Floating Gold vanity Cabinet", spec: "Waterproof Modular Setup" }
+            ],
+            whatsappMessage: "Hi Dinesh, I am interested in the 'Royal Gold Bath' design template from your website. Can you check product availability and share pricing details?"
+        },
+        minimalist: {
+            title: "Modern Minimalist Bath",
+            tag: "MATTE MINIMALIST",
+            description: "A sleek, geometric profile designed for contemporary architectural setups. It focuses on clean lines, wall-mounted fittings, matte black textures, and concrete-finish wall tiles.",
+            image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=500&fit=crop",
+            items: [
+                { name: "Matte Black Faucets & Mixers", spec: "Parryware Onyx Series" },
+                { name: "Matte Black Concealed Diverter", spec: "Parryware Premium" },
+                { name: "Gray Concrete-Finish Floor Tiles", spec: "Somany 600x600mm Matte" },
+                { name: "Rimless Wall Hung European Closet", spec: "Jaquar Rimless Design" },
+                { name: "Geometric Highlighter Wall Tiles", spec: "Kajaria Ceramic Series" }
+            ],
+            whatsappMessage: "Hi Dinesh, I am interested in the 'Modern Minimalist Bath' design template from your website. Can you check product availability and share pricing details?"
+        },
+        ecoflow: {
+            title: "Eco-Flow Smart Setup",
+            tag: "WATER CONSERVATION",
+            description: "A tech-forward setup focused on maximum water conservation and plumbing durability. Features sensor-activated taps, dual-flush cisterns, and leak-proof Prince CPVC systems.",
+            image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=500&fit=crop",
+            items: [
+                { name: "Sensor Touchless Basin Tap", spec: "Jaquar Sensotronic Series" },
+                { name: "Dual Flush Cistern Commode", spec: "Parryware Green-Clean Series" },
+                { name: "Leak-Proof CPVC Flowguard Pipes", spec: "Prince Flowguard Systems" },
+                { name: "SWR Drainage & Soil Piping", spec: "Prince Premium SWR" },
+                { name: "Slip-Resistant Floor Tiling", spec: "Kajaria Anti-Skid Series" }
+            ],
+            whatsappMessage: "Hi Dipak, I am interested in the 'Eco-Flow Smart Setup' design template from your website. Can you check piping and fittings availability?"
+        }
+    };
 
-        // Close on mouse leave for desktop hover experience
-        hotspot.addEventListener('mouseleave', () => {
-            hotspot.classList.remove('active');
-        });
-    });
+    const lookbookModal = document.getElementById('lookbook-modal');
+    const lookbookModalBody = document.getElementById('lookbook-modal-body-content');
 
-    // Close visualizer tooltips when clicking anywhere else
-    document.addEventListener('click', () => {
-        hotspots.forEach(h => h.classList.remove('active'));
-    });
+    window.openLookbookModal = (templateId) => {
+        const data = lookbookData[templateId];
+        if (!data) return;
+
+        // Determine correct contact person (Dinesh for sanitary/royal/minimalist, Dipak for plumbing/ecoflow)
+        const isPlumbing = templateId === 'ecoflow';
+        const contactName = isPlumbing ? "Dipak Agarwalla" : "Dinesh Agarwalla";
+        const contactPhone = isPlumbing ? "9954417161" : "7002808746";
+
+        lookbookModalBody.innerHTML = `
+            <span class="modal-cat-tag">${data.tag}</span>
+            <h3 class="modal-title">${data.title}</h3>
+            <p class="modal-desc">${data.description}</p>
+            
+            <img src="${data.image}" alt="${data.title}" style="width: 100%; height: auto; border-radius: var(--radius-md); margin-bottom: 24px; border: 1.5px solid rgba(197, 168, 128, 0.2);">
+
+            <h4 class="modal-subtitle">Coordinated Materials Checklist:</h4>
+            <div class="modal-lookbook-items">
+                ${data.items.map(item => `
+                    <div class="lookbook-item-row">
+                        <span class="lookbook-item-name">${item.name}</span>
+                        <span class="lookbook-item-spec">${item.spec}</span>
+                    </div>
+                `).join('')}
+            </div>
+
+            <div style="margin-top: 35px; text-align: center;">
+                <button class="btn btn-primary" onclick="whatsappInquireLookbook('${templateId}', '${contactPhone}')" style="width: 100%; justify-content: center; gap: 10px;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.733-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.588 1.977 14.12 .953 11.5 0.952 6.066.952 1.641 5.32 1.638 10.749c-.002 1.776.475 3.51 1.38 5.02L2.011 20.1l4.636-1.218zM17.476 14.4c-.321-.16-1.898-.937-2.194-1.045-.297-.108-.512-.16-.726.16-.214.32-.83.829-1.018 1.043-.187.214-.374.24-.694.08-.32-.16-1.353-.499-2.577-1.59-.953-.85-1.596-1.9-1.783-2.22-.188-.32-.02-.492.14-.652.143-.144.321-.374.482-.561.161-.188.214-.32.322-.534.107-.214.053-.4-.027-.56-.08-.16-.726-1.748-.994-2.395-.262-.63-.529-.544-.726-.554l-.62-.01c-.214 0-.563.08-.857.4-.294.32-1.123 1.097-1.123 2.674s1.15 3.1 1.31 3.315c.162.213 2.261 3.45 5.481 4.84.764.329 1.362.527 1.826.674.77.244 1.472.21 2.029.127.618-.093 1.898-.775 2.166-1.49.267-.714.267-1.327.187-1.455-.08-.126-.294-.213-.615-.373z"/></svg>
+                    <span>Inquire about this look with ${contactName}</span>
+                </button>
+            </div>
+        `;
+
+        lookbookModal.classList.add('active');
+        lookbookModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('overflow-hidden');
+    };
+
+    window.closeLookbookModal = () => {
+        lookbookModal.classList.remove('active');
+        lookbookModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    window.whatsappInquireLookbook = (templateId, phone) => {
+        const data = lookbookData[templateId];
+        if (!data) return;
+        const url = `https://wa.me/91${phone}?text=${encodeURIComponent(data.whatsappMessage)}`;
+        window.open(url, '_blank');
+    };
+
+    // Close lookbook modal on Escape key handled globally below
 
     // 4. Interactive Cost Estimator / Project Planner
     let currentStep = 1;
